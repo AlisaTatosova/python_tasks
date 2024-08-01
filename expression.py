@@ -20,6 +20,10 @@ class AbsractExpression(ABC):
 
     def __truediv__(self, other):
         return Div(self, other)
+
+    def apply(self, other):
+        return Composition(self, other)
+    
     
 class Add(AbsractExpression):
     def __init__(self, f, g):
@@ -81,4 +85,19 @@ class Div(AbsractExpression):
     def __str__(self):
         return f"({self.f} / {self.g})"
     
+class Composition(AbsractExpression):
+    def __init__(self, f, g):
+        self.f = f
+        self.g = g
 
+    def __call__(self, value):
+        return self.f(self.g(value))
+
+    # (f ∘ g)′(x) = f′(g(x)) ⋅ g′(x)
+    def derivative(self):
+        return Mul(Composition(self.f.derivative() , self.g), self.g.derivative()) 
+    
+    def __str__(self):
+        outer = str(self.f)
+        inner = str(self.g)
+        return outer.replace('(x)', f"({inner})")
