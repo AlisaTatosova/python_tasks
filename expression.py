@@ -100,4 +100,4 @@ class Composition(AbsractExpression):
     def __str__(self):
         outer = str(self.f)
         inner = str(self.g)
-        return outer.replace('(x)', f"({inner})")
+        return outer.replace('x', f"({inner})")
