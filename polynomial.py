@@ -29,7 +29,7 @@ class Polynomial(AbsractExpression):
             if i == 0:
                 strs.append(f"{coefficient}")
             elif i == 1:
-                strs.append(f"{coefficient}x")
+                strs.append(f"{coefficient} * (x)")
             else:
-                strs.append(f"{coefficient}x ^ {i}")
+                strs.append(f"{coefficient} * (x) ^ {i}")
         return " + ".join(strs)

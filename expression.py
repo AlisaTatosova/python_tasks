@@ -20,10 +20,9 @@ class AbsractExpression(ABC):
 
     def __truediv__(self, other):
         return Div(self, other)
-
+    
     def apply(self, other):
         return Composition(self, other)
-    
     
 class Add(AbsractExpression):
     def __init__(self, f, g):
@@ -35,7 +34,7 @@ class Add(AbsractExpression):
 
     # (f(x) + g(x))' = f'(x) + g'(x)
     def derivative(self):
-        return Add(self.f.derivative(), self.g.derivative())
+        return self.f.derivative() + self.g.derivative()
     
     def __str__(self):
         return f"({self.f} + {self.g})"
@@ -50,7 +49,7 @@ class Sub(AbsractExpression):
 
     # (f(x) - g(x))' = f'(x) - g'(x)
     def derivative(self):
-        return Sub(self.f.derivative(), self.g.derivative())
+        return self.f.derivative() - self.g.derivative()
     
     def __str__(self):
         return f"({self.f} - {self.g})"
@@ -65,7 +64,7 @@ class Mul(AbsractExpression):
 
     # (f(x) * g(x))' = f'(x) g(x) + f(x) g'(x)
     def derivative(self):
-        return Add(Mul(self.f.derivative(), self.g), Mul(self.f, self.g.derivative()))
+        return (self.f.derivative() * self.g) + (self.f * self.g.derivative())
     
     def __str__(self):
         return f"({self.f} * {self.g})"
@@ -80,7 +79,7 @@ class Div(AbsractExpression):
 
     # (f(x) / g(x))' = (f'(x) * g(x) - f(x) * g'(x)) / g^2(x)
     def derivative(self):
-        return Div(Sub(Mul(self.f.derivative(), self.g), Mul(self.f, self.g.derivative())), Mul(self.g, self.g))
+        return ((self.f.derivative() * self.g) - (self.f * self.g.derivative())) / (self.g * self.g)
     
     def __str__(self):
         return f"({self.f} / {self.g})"
@@ -95,9 +94,10 @@ class Composition(AbsractExpression):
 
     # (f ∘ g)′(x) = f′(g(x)) ⋅ g′(x)
     def derivative(self):
-        return Mul(Composition(self.f.derivative() , self.g), self.g.derivative()) 
+        return self.f.derivative().apply(self.g) * self.g.derivative()
     
     def __str__(self):
         outer = str(self.f)
         inner = str(self.g)
-        return outer.replace('x', f"({inner})")
+        return outer.replace('(x)', f"({inner})")
+        

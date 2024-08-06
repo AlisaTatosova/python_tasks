@@ -1,5 +1,6 @@
 import math
-from expression import AbsractExpression, Mul
+from expression import AbsractExpression
+from polynomial import Polynomial
 
 class Sin(AbsractExpression):
     def __call__(self, value):
@@ -16,17 +17,7 @@ class Cos(AbsractExpression):
         return math.cos(value)
 
     def derivative(self):
-        return Mul(MinusOneToCallableObject(), Sin())
+        return Polynomial(-1) * Sin()
     
     def __str__(self):
         return f"cos(x)"
-    
-class MinusOneToCallableObject(AbsractExpression):         
-    def derivative(self):
-        return 0
-
-    def __call__(self, value):
-        return -1
-    
-    def __str__(self):
-        return f"(-1)"
