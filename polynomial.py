@@ -1,35 +1,32 @@
-from expression import AbsractExpression
+from expression import AbsractExpression, Const
 
-class Polynomial(AbsractExpression):
-    def __init__(self, *coefficients):
-        self.coefficients = coefficients
+class X(AbsractExpression):
+    def __init__(self, power = 1):
+        self.power = power
 
     def __call__(self, value):
-        result = 0
-        for i, coefficient in enumerate(self.coefficients):
-            result += coefficient * (value ** i)
+        result = 1
+        for _ in range(0, self.power):
+            result *= value
         return result
-
+    
     def derivative(self):
-        new_coefficients = []
-        for i, coefficient in enumerate(self.coefficients):
-            new_coefficients.append(i * coefficient)
-        new_coefficients = new_coefficients[1:]
-
-        return Polynomial(*new_coefficients)
+        return Const(self.power) * X(self.power - 1)
 
     def __str__(self):
-        strs = []
-        for i, coefficient in enumerate(self.coefficients):
-            if coefficient == 0:
-                continue
-            elif coefficient < 0:
-                coefficient = f"({coefficient})"
+        return f"(x) ^ {self.power}"
 
-            if i == 0:
-                strs.append(f"{coefficient}")
-            elif i == 1:
-                strs.append(f"{coefficient} * (x)")
-            else:
-                strs.append(f"{coefficient} * (x) ^ {i}")
-        return " + ".join(strs)
+class Polynomial(X):
+    def __init__(self, *coefficients):
+        self.result = Const(coefficients[0])
+        for i, item in enumerate(coefficients):
+            self.result += (Const(item) * X(i))
+
+    def __call__(self, value):
+        return self.result.__call__(value)
+
+    def derivative(self):
+        return self.result.derivative()
+
+    def __str__(self):
+        return str(self.result)

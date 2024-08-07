@@ -100,4 +100,17 @@ class Composition(AbsractExpression):
         outer = str(self.f)
         inner = str(self.g)
         return outer.replace('(x)', f"({inner})")
+    
+class Const(AbsractExpression):
+    def __init__(self, value):
+        self.value = value
+
+    def __call__(self, value):
+        return self.value
+    
+    def derivative(self):
+        return Const(0)
+    
+    def __str__(self):
+        return f"({self.value})" if self.value < 0 else str(self.value)
         
