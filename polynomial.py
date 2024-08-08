@@ -1,4 +1,4 @@
-from expression import AbsractExpression, Const
+from expression import AbsractExpression, Const, Add
 
 class X(AbsractExpression):
     def __init__(self, power = 1):
@@ -16,17 +16,12 @@ class X(AbsractExpression):
     def __str__(self):
         return f"(x) ^ {self.power}"
 
-class Polynomial(X):
-    def __init__(self, *coefficients):
-        self.result = Const(coefficients[0])
-        for i, item in enumerate(coefficients):
-            self.result += (Const(item) * X(i))
 
-    def __call__(self, value):
-        return self.result.__call__(value)
+def Polynomial(*coefficients):
+    print(coefficients[0])
+    result = Const(0)
+    for i, item in enumerate(coefficients):
+        result += (Const(item) * X(i))
+    return result
 
-    def derivative(self):
-        return self.result.derivative()
-
-    def __str__(self):
-        return str(self.result)
+   
