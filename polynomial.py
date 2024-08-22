@@ -14,14 +14,12 @@ class X(AbsractExpression):
         return Const(self.power) * X(self.power - 1)
 
     def __str__(self):
-        return f"(x) ^ {self.power}"
+        return "1" if self.power == 0 else f"(x) ^ {self.power}"
 
 
 def Polynomial(*coefficients):
-    print(coefficients[0])
-    result = Const(0)
-    for i, item in enumerate(coefficients):
+    result = Const(coefficients[0]) * X(0)
+    for i, item in enumerate(coefficients[1:], start=1):
         result += (Const(item) * X(i))
     return result
-
    
